@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#174b35">
+  <meta name="description" content="A bilingual farming assistant for local weather, crop tracking and farm reminders.">
+  <title>VayalThunai | Smart Farming Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="VayalThunai home">
+        <span class="brand-mark">🌾</span><span><b>VayalThunai</b><small data-i18n="tagline">Your farming companion</small></span>
+      </a>
+      <div class="side-label" data-i18n="workspace">WORKSPACE</div>
+      <nav class="nav-list" aria-label="Main navigation">
+        <button class="nav-link active" data-page="dashboard"><span>▦</span><span data-i18n="navDashboard">Overview</span></button>
+        <button class="nav-link" data-page="weather"><span>☀</span><span data-i18n="navWeather">Weather</span></button>
+        <button class="nav-link" data-page="crops"><span>♧</span><span data-i18n="navCrops">My crops</span></button>
+        <button class="nav-link" data-page="reminders"><span>◷</span><span data-i18n="navReminders">Reminders</span><span class="nav-count" id="navReminderCount">0</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="help-card"><span class="help-icon">✦</span><b data-i18n="smallSteps">Small steps, better harvests.</b><p data-i18n="helpText">Keep an eye on the weather and your farm tasks.</p></div>
+        <div class="sidebar-foot">VayalThunai <span>•</span> <span data-i18n="prototype">Student mini project</span></div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu" aria-label="Toggle menu">☰</button>
+        <div class="breadcrumb"><span data-i18n="workspace">WORKSPACE</span><span>/</span><b id="currentPageName">Overview</b></div>
+        <div class="top-actions">
+          <span class="today-label" id="todayLabel"></span>
+          <label class="language-control"><span>文</span><select id="languageSelect" aria-label="Choose language"><option value="en">English</option><option value="ta">தமிழ்</option></select></label>
+        </div>
+      </header>
+
+      <div class="content">
+        <section class="page active" id="page-dashboard">
+          <div class="welcome-row">
+            <div><div class="eyebrow" data-i18n="farmerWorkspace">FARMER WORKSPACE</div><h1 data-i18n="welcome">Good day. Let's grow better. 🌱</h1><p data-i18n="welcomeSub">Your local weather, crops and important farm tasks — in one place.</p></div>
+            <div class="welcome-art" aria-hidden="true">🌱</div>
+          </div>
+          <div class="metric-grid">
+            <article class="metric-card"><div class="metric-top"><span data-i18n="totalCrops">Crops you're tracking</span><span class="metric-icon green">♧</span></div><strong id="metricCrops">0</strong><small data-i18n="cropMetricHint">Saved in this browser</small></article>
+            <article class="metric-card"><div class="metric-top"><span data-i18n="openTasks">Upcoming tasks</span><span class="metric-icon amber">◷</span></div><strong id="metricTasks">0</strong><small data-i18n="taskMetricHint">Not marked as completed</small></article>
+            <article class="metric-card weather-metric"><div class="metric-top"><span data-i18n="localWeather">Local weather</span><span class="metric-icon blue">☀</span></div><strong id="metricTemp">--°</strong><small id="metricPlace" data-i18n="weatherNotLoaded">Search for your town</small></article>
+          </div>
+          <div class="dashboard-grid">
+            <article class="surface weather-preview">
+              <div class="section-heading"><div><div class="eyebrow" data-i18n="atAGlance">AT A GLANCE</div><h2 data-i18n="weatherSnapshot">Weather snapshot</h2></div><button class="text-button" data-go="weather" data-i18n="viewWeather">View weather ↗</button></div>
+              <div class="weather-snapshot"><div class="sun-illustration">🌤️</div><div><strong id="dashWeatherText" data-i18n="noWeather">No weather loaded yet</strong><p id="dashWeatherPlace" data-i18n="searchWeatherHint">Search a town in the Weather section.</p></div><div class="snapshot-temp" id="dashWeatherTemp">--°</div></div>
+              <div class="weather-mini-stats"><div><span>💧</span><small data-i18n="humidity">Humidity</small><b id="dashHumidity">--%</b></div><div><span>🌧</span><small data-i18n="rainChance">Rain (current)</small><b id="dashRain">-- mm</b></div><div><span>💨</span><small data-i18n="wind">Wind</small><b id="dashWind">-- km/h</b></div></div>
+            </article>
+            <article class="surface next-tasks">
+              <div class="section-heading"><div><div class="eyebrow" data-i18n="stayOnTrack">STAY ON TRACK</div><h2 data-i18n="nextTasks">Next farm tasks</h2></div><button class="text-button" data-go="reminders" data-i18n="seeAll">See all ↗</button></div>
+              <div id="dashboardTasks" class="compact-list"><div class="empty-state" data-i18n="noTasks">No reminders yet. Add your first farm task.</div></div>
+            </article>
+          </div>
+          <article class="surface crop-overview">
+            <div class="section-heading"><div><div class="eyebrow" data-i18n="yourFarm">YOUR FARM</div><h2 data-i18n="cropOverview">Crop overview</h2></div><button class="primary-button small" data-go="crops">＋ <span data-i18n="addCrop">Add crop</span></button></div>
+            <div id="dashboardCrops" class="crop-strip"><div class="empty-state" data-i18n="noCrops">No crops added yet.</div></div>
+          </article>
+          <p class="privacy-note"><span>🔒</span><span data-i18n="localStorageNote">Your crop and reminder data stays in this browser on this device.</span></p>
+        </section>
+
+        <section class="page" id="page-weather">
+          <div class="page-heading"><div><div class="eyebrow" data-i18n="weatherCentre">WEATHER CENTRE</div><h1 data-i18n="weatherTitle">Weather for your area</h1><p data-i18n="weatherIntro">Look up a town to see current conditions and a 7-day outlook.</p></div><div class="heading-icon">☀️</div></div>
+          <article class="surface search-panel">
+            <label for="cityInput" data-i18n="townLabel">Town or village</label>
+            <div class="search-row"><input id="cityInput" type="text" autocomplete="off" placeholder="e.g. Tiruchirappalli, Thanjavur"><button class="primary-button" id="weatherSearch"><span>⌕</span><span data-i18n="search">Search weather</span></button></div>
+            <div class="hint" data-i18n="weatherSourceHint">Weather is provided by Open-Meteo. Internet access is required.</div>
+            <div id="weatherMessage" class="inline-message" role="status" aria-live="polite"></div>
+          </article>
+          <div id="weatherResults" class="weather-results hidden">
+            <article class="surface current-weather">
+              <div class="current-location"><div><div class="eyebrow" data-i18n="currentConditions">CURRENT CONDITIONS</div><h2 id="weatherPlace">—</h2><p id="weatherUpdated">—</p></div><span class="condition-icon" id="conditionIcon">🌤️</span></div>
+              <div class="current-main"><strong id="currentTemp">--°</strong><div><b id="conditionText">—</b><span id="feelsLike">—</span></div></div>
+              <div class="weather-facts"><div><span>💧</span><small data-i18n="humidity">Humidity</small><b id="currentHumidity">--%</b></div><div><span>🌧️</span><small data-i18n="precipitation">Precipitation</small><b id="currentRain">-- mm</b></div><div><span>💨</span><small data-i18n="wind">Wind</small><b id="currentWind">-- km/h</b></div><div><span>☀️</span><small data-i18n="uvIndex">UV index</small><b id="currentUV">--</b></div></div>
+            </article>
+            <article class="surface forecast-panel"><div class="section-heading"><div><div class="eyebrow" data-i18n="planAhead">PLAN AHEAD</div><h2 data-i18n="sevenDay">7-day forecast</h2></div><span class="forecast-tag" data-i18n="daily">DAILY</span></div><div id="forecastList" class="forecast-list"></div></article>
+            <div class="weather-disclaimer" data-i18n="weatherDisclaimer">Weather information is general guidance. Check local conditions before making irrigation or pesticide decisions.</div>
+          </div>
+        </section>
+
+        <section class="page" id="page-crops">
+          <div class="page-heading"><div><div class="eyebrow" data-i18n="farmRecords">FARM RECORDS</div><h1 data-i18n="cropsTitle">My crops</h1><p data-i18n="cropsIntro">Keep a simple record of what you are growing.</p></div><div class="heading-icon">🌿</div></div>
+          <article class="surface form-panel">
+            <div class="section-heading"><div><h2 data-i18n="addCropTitle">Add a crop</h2><p data-i18n="cropFormHint">Enter the crop and the date you planted it.</p></div><span class="form-step">01</span></div>
+            <form id="cropForm" class="form-grid">
+              <div class="field"><label for="cropName" data-i18n="cropNameLabel">Crop name</label><input id="cropName" maxlength="50" required placeholder="e.g. Paddy / நெல்"></div>
+              <div class="field"><label for="cropVariety" data-i18n="varietyLabel">Variety (optional)</label><input id="cropVariety" maxlength="50" placeholder="e.g. Ponni"></div>
+              <div class="field"><label for="plantDate" data-i18n="plantDateLabel">Planting date</label><input id="plantDate" type="date" required></div>
+              <div class="field"><label for="cropArea" data-i18n="areaLabel">Area (optional)</label><input id="cropArea" maxlength="30" placeholder="e.g. 1 acre"></div>
+              <div class="form-actions"><button class="primary-button" type="submit">＋ <span data-i18n="saveCrop">Save crop</span></button><button class="secondary-button" type="reset" data-i18n="clear">Clear</button></div>
+            </form>
+            <div id="cropMessage" class="inline-message" role="status"></div>
+          </article>
+          <div class="section-heading list-heading"><div><div class="eyebrow" data-i18n="savedRecords">SAVED RECORDS</div><h2 data-i18n="yourCrops">Your crops</h2></div><span class="count-pill" id="cropCount">0</span></div>
+          <div id="cropList" class="record-grid"></div>
+        </section>
+
+        <section class="page" id="page-reminders">
+          <div class="page-heading"><div><div class="eyebrow" data-i18n="farmCalendar">FARM CALENDAR</div><h1 data-i18n="remindersTitle">Farm reminders</h1><p data-i18n="remindersIntro">Plan watering, fertilizer, field checks and harvest tasks.</p></div><div class="heading-icon">🗓️</div></div>
+          <article class="surface form-panel">
+            <div class="section-heading"><div><h2 data-i18n="createReminder">Create a reminder</h2><p data-i18n="reminderHint">Choose a task and the date you want to be reminded.</p></div><span class="form-step">02</span></div>
+            <form id="reminderForm" class="form-grid">
+              <div class="field"><label for="taskName" data-i18n="taskNameLabel">Task name</label><input id="taskName" maxlength="80" required placeholder="e.g. Check field water level"></div>
+              <div class="field"><label for="taskType" data-i18n="taskTypeLabel">Task category</label><select id="taskType"><option value="watering">Watering</option><option value="fertilizer">Fertilizer</option><option value="pest">Pest / disease check</option><option value="weeding">Weeding</option><option value="harvest">Harvest</option><option value="other">Other</option></select></div>
+              <div class="field"><label for="reminderDate" data-i18n="reminderDateLabel">Reminder date</label><input id="reminderDate" type="date" required></div>
+              <div class="field"><label for="reminderCrop" data-i18n="relatedCropLabel">Related crop (optional)</label><select id="reminderCrop"><option value="" data-i18n="noSpecificCrop">No specific crop</option></select></div>
+              <div class="field full-field"><label for="taskNotes" data-i18n="notesLabel">Notes (optional)</label><textarea id="taskNotes" maxlength="240" rows="2" placeholder="Add a short note..."></textarea></div>
+              <div class="form-actions"><button class="primary-button" type="submit">＋ <span data-i18n="saveReminder">Save reminder</span></button><button class="secondary-button" type="reset" data-i18n="clear">Clear</button></div>
+            </form>
+            <div id="reminderMessage" class="inline-message" role="status"></div>
+          </article>
+          <div class="reminder-toolbar"><div class="section-heading"><div><div class="eyebrow" data-i18n="yourSchedule">YOUR SCHEDULE</div><h2 data-i18n="allReminders">All reminders</h2></div><span class="count-pill" id="reminderCount">0</span></div><select id="reminderFilter" aria-label="Filter reminders"><option value="all" data-i18n="allTasks">All tasks</option><option value="pending" data-i18n="pendingTasks">Pending</option><option value="completed" data-i18n="completedTasks">Completed</option></select></div>
+          <div id="reminderList" class="reminder-list"></div>
+        </section>
+      </div>
+      <footer class="app-footer"><span>🌾 VayalThunai</span><span data-i18n="footerText">A student project to support informed farm planning.</span></footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
